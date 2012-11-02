@@ -31,8 +31,8 @@ namespace Isometric_City_Generatorv2
             //Draw both the shadows and buildings here.
             if (Texture != 0)
             {
-                sb.Draw(Assets.BuildingText[0], DrawRect, null, Tint, 0f, Vector2.Zero, SpriteEffects.None, Layer);
-                sb.Draw(Assets.BuildingShadowsText[0], DrawRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, Layer + 0.001f);
+                sb.Draw(Assets.BuildingText[0], DrawRect, Tint);
+                sb.Draw(Assets.BuildingShadowsText[0], DrawRect, Color.White);
             }
         }
     }

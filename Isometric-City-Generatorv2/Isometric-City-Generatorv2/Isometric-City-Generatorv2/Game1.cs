@@ -13,8 +13,8 @@ namespace Isometric_City_Generatorv2
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        const int MAXHEIGHT = 17;
-        const int MAXWIDTH = 17;
+        const int MAXHEIGHT = 35;
+        const int MAXWIDTH = 35;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -29,8 +29,6 @@ namespace Isometric_City_Generatorv2
 
         protected override void Initialize()
         {
-
-
             base.Initialize();
         }
 
@@ -52,7 +50,9 @@ namespace Isometric_City_Generatorv2
         {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();           
+                this.Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                bf = new BuildingFactory(griddata);
 
             base.Update(gameTime);
         }
@@ -60,24 +60,12 @@ namespace Isometric_City_Generatorv2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            //Draw Grid
-            foreach (Rectangle r in griddata)
-            {
-                spriteBatch.Draw(Assets.Grid, r, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
-            }
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
-            //Draw Buildings            
-            for (int y = 0; y < bf.Buildings.GetUpperBound(1); y++)
-            {
-                for (int x = 0; x < bf.Buildings.GetUpperBound(0); x++)
-                {
-                    for (int z = 0; z < bf.Buildings.GetUpperBound(2); z++)
-                    {
-                        bf.Buildings[x, y, z].Draw(spriteBatch);
-                    }
-                }
-            }
+            DrawGrid();
+
+            DrawBuildings();        
+            
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -94,6 +82,37 @@ namespace Isometric_City_Generatorv2
             }
 
             bf = new BuildingFactory(griddata);
+        }
+
+        public void DrawBuildings()
+        {
+
+            for (int y = 0; y < bf.Buildings.GetUpperBound(1); y++)
+            {
+                for (int x = bf.Buildings.GetUpperBound(0) - 1; x >= 0; x--)
+                {
+                //for (int x = 0; x < bf.Buildings.GetUpperBound(0); x++)
+                //{
+                    for (int z = 0; z < bf.Buildings.GetUpperBound(2); z++)
+                    {
+                        bf.Buildings[x, y, z].Draw(spriteBatch);
+                    }
+                }
+            }
+        }
+
+        public void DrawGrid()
+        {
+            for (int y = 0; y < griddata.GetUpperBound(1); y++)
+            {
+                for (int x = 0; x < griddata.GetUpperBound(0); x++)
+                {
+                    if (y == 0)
+                        spriteBatch.Draw(Assets.Grid, griddata[x, y], Color.Red);
+                    else
+                        spriteBatch.Draw(Assets.Grid, griddata[x,y], Color.White);
+                }
+            }
         }
     }
 }

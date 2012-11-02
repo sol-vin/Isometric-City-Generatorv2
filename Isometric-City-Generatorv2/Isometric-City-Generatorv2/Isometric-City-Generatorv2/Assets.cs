@@ -16,7 +16,7 @@ namespace Isometric_City_Generatorv2
     {
         public const int BUILDINGHEIGHT = 10;
         public const int SpacingX = 60;
-        public const int SpacingY = 300;
+        public const int SpacingY = 250;
 
         public static Texture2D Grid;
         public static Texture2D[] BuildingText;

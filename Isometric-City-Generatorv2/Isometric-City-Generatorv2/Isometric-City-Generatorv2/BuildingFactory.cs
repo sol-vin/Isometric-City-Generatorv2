@@ -32,30 +32,22 @@ namespace Isometric_City_Generatorv2
                         int texture = 0;
 
                         //Make the rectangles;
-                        drawrect = new Rectangle(positiondata[x, y].X, positiondata[x, y].Y + ((z + 1) * Assets.BUILDINGHEIGHT), Assets.Tilesize.X, Assets.Tilesize.Y);
+                        drawrect = new Rectangle(positiondata[x, y].X, positiondata[x, y].Y - ((z + 1) * Assets.BUILDINGHEIGHT - z) + 1, Assets.Tilesize.X, Assets.Tilesize.Y);
 
                         //Assign a Texture
-                        texture = 1;
-                        //if (z == 0)
-                        //{
-                        //    texture = rand.Next(0, 2);
-                        //}
-                        //if (z != 0 && Buildings[x, y, z - 1].Texture != 0)
-                        //{
-                        //    texture = rand.Next(0, 2);
-                        //}
+                        if (z == 0)
+                        {
+                            texture = rand.Next(0, 2);
+                        }
+                        if (z != 0 && Buildings[x, y, z - 1].Texture != 0)
+                        {
+                            texture = rand.Next(0, 2);
+                        }
 
                         Buildings[x, y, z] = new Building(drawrect, texture, RandomColor());
                     }
                 }
             }
-
-            //Debgubuildings
-            for (int i = 0; i < 6; i++)
-            {
-                Buildings[0, 0, 0] = new Building(Buildings[0, 0, i].DrawRect, 1, Color.Red);
-            }
-
         }
 
         private Color RandomColor()
