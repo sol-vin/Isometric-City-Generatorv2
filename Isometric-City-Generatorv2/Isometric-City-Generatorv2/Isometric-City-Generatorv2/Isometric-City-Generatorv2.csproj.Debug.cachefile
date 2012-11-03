@@ -1,3 +1,8 @@
-Content\grid.xnb
-Content\building.xnb
-Content\buildingshadow.xnb
+Content\floor\grid.xnb
+Content\building\building.xnb
+Content\shading\cubeshadow.xnb
+Content\building\building1.xnb
+Content\features\door.xnb
+Content\features\windows.xnb
+Content\floor\grass.xnb
+Content\floor\road.xnb

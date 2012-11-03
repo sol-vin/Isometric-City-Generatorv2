@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace Isometric_City_Generatorv2
 {
@@ -16,23 +7,40 @@ namespace Isometric_City_Generatorv2
     {
         public Rectangle DrawRect;
         public int Texture;
-        Color Tint;
-        public float Layer = 1f;
+        public Color Tint;
+        public bool FinalBlock, Flip, Bottom, Roof, Windows;
 
-        public Building(Rectangle drawrect, int texture, Color tint)
+        public Building()
         {
-            DrawRect = drawrect;
-            Texture = texture;
-            Tint = tint;
+            Texture = -1;
         }
 
         public void Draw(SpriteBatch sb)
         {
             //Draw both the shadows and buildings here.
-            if (Texture != 0)
+            if (Texture >= 0)
             {
-                sb.Draw(Assets.BuildingText[0], DrawRect, Tint);
+                SpriteEffects s;
+                if (Flip)
+                    s = SpriteEffects.FlipHorizontally;
+                else
+                    s = SpriteEffects.None;
+
+                sb.Draw(Assets.BuildingText[Texture], DrawRect, Tint);                
+
+                if (Bottom)
+                {
+                    sb.Draw(Assets.Features[0], DrawRect, null, Color.White, 0f, Vector2.Zero, s, 0f);
+                }
+
+                if (Windows)
+                {
+                    sb.Draw(Assets.Features[1], DrawRect, Color.White);
+                }
+
+                //Must be last!
                 sb.Draw(Assets.BuildingShadowsText[0], DrawRect, Color.White);
+
             }
         }
     }
