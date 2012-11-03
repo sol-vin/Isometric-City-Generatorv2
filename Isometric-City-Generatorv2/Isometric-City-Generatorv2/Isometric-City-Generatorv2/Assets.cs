@@ -24,8 +24,8 @@ namespace Isometric_City_Generatorv2
 
         public static Texture2D[] FloorTiles;
         /// 0 = Grass
-        /// 1 = Sidewalk
-        /// 2 = Road
+        /// 1 = Road
+        /// 2 = Road 4-way
 
         public static Point Tilesize;
 
@@ -49,6 +49,7 @@ namespace Isometric_City_Generatorv2
 
             FloorTiles[0] = game.Content.Load<Texture2D>(@"floor/grass");
             FloorTiles[1] = game.Content.Load<Texture2D>(@"floor/road");
+            FloorTiles[2] = game.Content.Load<Texture2D>(@"floor/road4way");
 
             Tilesize = new Point(BuildingText[0].Width, BuildingText[0].Height);
         }

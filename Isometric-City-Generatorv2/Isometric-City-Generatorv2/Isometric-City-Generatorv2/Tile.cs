@@ -12,13 +12,20 @@ namespace Isometric_City_Generatorv2
         public Rectangle DrawRect;
         public int Texture;
         public Color Tint;
+        public bool Flip;
 
         public void Draw(SpriteBatch sb)
         {
             //Draw both the shadows and buildings here.
             if (Texture >= 0)
             {
-                sb.Draw(Assets.FloorTiles[Texture], DrawRect, Tint);
+                SpriteEffects s;
+                if (Flip)
+                    s = SpriteEffects.FlipHorizontally;
+                else
+                    s = SpriteEffects.None;
+                   
+                sb.Draw(Assets.FloorTiles[Texture], DrawRect, null, Tint, 0f, Vector2.Zero, s, 0f);
             }
         }
     }

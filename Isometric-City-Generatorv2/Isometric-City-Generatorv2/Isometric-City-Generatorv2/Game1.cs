@@ -49,7 +49,10 @@ namespace Isometric_City_Generatorv2
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                tf = new TileFactory(MAXWIDTH, MAXHEIGHT);
                 bf = new BuildingFactory(tf.TileData);
+            }
 
             base.Update(gameTime);
         }
