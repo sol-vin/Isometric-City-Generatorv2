@@ -7,13 +7,18 @@ namespace Isometric_City_Generatorv2
     public struct Assets
     {
         public const int BUILDINGHEIGHT = 10;
-        public const int SpacingX = 60;
+        public const int SpacingX = 20;
         public const int SpacingY = 250;
+        public const int MINROOFRANGE = 1;
+        public const int MAXROOFRANGE = 3;
 
         public static Texture2D Grid;
 
         public static Texture2D[] BuildingText;
         /// 0 = Blank block
+        /// 1 = Roof1
+        /// 2 = Roof2
+        /// 3 = Roof3
 
         public static Texture2D[] BuildingShadowsText;
         /// 0 = Cube Shading
@@ -21,11 +26,16 @@ namespace Isometric_City_Generatorv2
         public static Texture2D[] Features;
         /// 0 = Door
         /// 1 = Windows
+        /// 2 = Roof 1 - Billboard
+        /// 3 = Roof 2 - Light
 
         public static Texture2D[] FloorTiles;
         /// 0 = Grass
         /// 1 = Road
         /// 2 = Road 4-way
+        
+        public static Texture2D[] Plants;
+        /// 0 = Tree
 
         public static Point Tilesize;
 
@@ -33,23 +43,31 @@ namespace Isometric_City_Generatorv2
 
         public static void LoadContent(Game game)
         {
-            BuildingShadowsText = new Texture2D[3];
+            BuildingShadowsText = new Texture2D[1];
             BuildingText = new Texture2D[3];
-            Features = new Texture2D[3];
+            Features = new Texture2D[4];
             FloorTiles = new Texture2D[3];
+            Plants = new Texture2D[2];
 
             Grid = game.Content.Load<Texture2D>(@"floor/grid");
 
-            BuildingText[0] = game.Content.Load<Texture2D>(@"building/building1");
+            BuildingText[0] = game.Content.Load<Texture2D>(@"building/building");
+            BuildingText[1] = game.Content.Load<Texture2D>(@"building/roof1");
+            BuildingText[2] = game.Content.Load<Texture2D>(@"building/roof2");
 
             BuildingShadowsText[0] = game.Content.Load<Texture2D>(@"shading/cubeshadow");
 
             Features[0] = game.Content.Load<Texture2D>(@"features/door");
             Features[1] = game.Content.Load<Texture2D>(@"features/windows");
+            Features[2] = game.Content.Load<Texture2D>(@"features/roof1billboard");
+            Features[3] = game.Content.Load<Texture2D>(@"features/roof2light");
 
             FloorTiles[0] = game.Content.Load<Texture2D>(@"floor/grass");
             FloorTiles[1] = game.Content.Load<Texture2D>(@"floor/road");
             FloorTiles[2] = game.Content.Load<Texture2D>(@"floor/road4way");
+
+            Plants[0] = game.Content.Load<Texture2D>(@"plants/tree");
+            Plants[1] = game.Content.Load<Texture2D>(@"plants/tree2");
 
             Tilesize = new Point(BuildingText[0].Width, BuildingText[0].Height);
         }

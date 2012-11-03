@@ -110,6 +110,8 @@
     <Compile Include="Assets.cs" />
     <Compile Include="Building.cs" />
     <Compile Include="BuildingFactory.cs" />
+    <Compile Include="IsometricObject.cs" />
+    <Compile Include="Plant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

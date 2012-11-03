@@ -7,14 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Isometric_City_Generatorv2
 {
-    public class Tile
+    public class Tile : IsometricObject
     {
-        public Rectangle DrawRect;
-        public int Texture;
-        public Color Tint;
-        public bool Flip;
-
-        public void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb)
         {
             //Draw both the shadows and buildings here.
             if (Texture >= 0)
