@@ -38,13 +38,6 @@ namespace Isometric_City_Generatorv2
                 {
                     sb.Draw(Assets.Features[FeatureTexture], DrawRect, null, Color.White, 0f, Vector2.Zero, fs, 0f);    
                 }
-                
-                //Must be last!
-                if (Texture == 0)
-                {
-                    sb.Draw(Assets.BuildingShadowsText[0], DrawRect, Color.White);
-                }
-
             }
         }
     }

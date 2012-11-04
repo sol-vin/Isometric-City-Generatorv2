@@ -9,6 +9,8 @@ namespace Isometric_City_Generatorv2
 {
     public class Tile : IsometricObject
     {
+        public bool Buildable;
+
         public override void Draw(SpriteBatch sb)
         {
             //Draw both the shadows and buildings here.

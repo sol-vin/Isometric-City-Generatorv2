@@ -38,7 +38,7 @@ namespace Isometric_City_Generatorv2
 
                     TileData[x, y].DrawRect = new Rectangle((x * (Assets.Grid.Width / 2) - x - y) + (y * (Assets.Grid.Width / 2) + Assets.SpacingX), (y * (Assets.Grid.Height / 2)) - (x * (Assets.Grid.Height / 2) + y - x) + Assets.SpacingY, Assets.Grid.Width, Assets.Grid.Height);
 
-                    TileData[x, y].Texture = 0;                    
+                    TileData[x, y].Texture = Assets.GRASS;                    
 
                     TileData[x, y].Tint = Color.White;
                 }
@@ -101,14 +101,14 @@ namespace Isometric_City_Generatorv2
                 //Generate the road line
                 for (int y = 0; y < MaxY; y++)
                 {
-                    if (TileData[randomx, y].Texture == 0)
+                    if (TileData[randomx, y].Texture == Assets.GRASS)
                     {
-                        TileData[randomx, y].Texture = 1;
+                        TileData[randomx, y].Texture = Assets.ROAD;
                         TileData[randomx, y].Flip = true;
                     }
-                    else if (TileData[randomx, y].Texture == 1)
+                    else if (TileData[randomx, y].Texture == Assets.ROAD)
                     {
-                        TileData[randomx, y].Texture = 2;
+                        TileData[randomx, y].Texture = Assets.ROAD4WAY;
                     }
                 }
 
@@ -130,13 +130,13 @@ namespace Isometric_City_Generatorv2
 
                 for (int x = 0; x < MaxX; x++)
                 {
-                    if (TileData[x, randomy].Texture == 0)
+                    if (TileData[x, randomy].Texture == Assets.GRASS)
                     {
-                        TileData[x, randomy].Texture = 1;
+                        TileData[x, randomy].Texture = Assets.ROAD;
                     }
-                    else if (TileData[x, randomy].Texture == 1)
+                    else if (TileData[x, randomy].Texture == Assets.ROAD)
                     {
-                        TileData[x, randomy].Texture = 2;
+                        TileData[x, randomy].Texture = Assets.ROAD4WAY;
                     }
                 }
             }
