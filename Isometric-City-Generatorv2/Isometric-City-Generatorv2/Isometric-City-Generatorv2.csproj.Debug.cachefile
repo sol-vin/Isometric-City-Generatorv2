@@ -1,7 +1,6 @@
 Content\floor\grid.xnb
 Content\building\building.xnb
 Content\shading\cubeshadow.xnb
-Content\building\building1.xnb
 Content\features\door.xnb
 Content\features\windows.xnb
 Content\floor\grass.xnb
@@ -10,6 +9,10 @@ Content\floor\road4way.xnb
 Content\plants\tree.xnb
 Content\plants\tree2.xnb
 Content\building\roof1.xnb
-Content\features\roof1billboard.xnb
+Content\features\roof1billboard1.xnb
 Content\features\roof2light.xnb
 Content\building\roof2.xnb
+Content\features\roof1billboard2.xnb
+Content\features\roof1billboard3.xnb
+Content\building\roof3.xnb
+Content\structures\clocktower\clocktower.xnb

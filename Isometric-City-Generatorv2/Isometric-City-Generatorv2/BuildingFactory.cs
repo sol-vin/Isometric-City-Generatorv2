@@ -30,6 +30,7 @@ namespace Isometric_City_Generatorv2
             AddBuildings(tiledata);
             AddPlants(tiledata);
             AddRoofs();
+            AddStructures(tiledata);
         }
 
         public void Draw(SpriteBatch sb)
@@ -85,15 +86,16 @@ namespace Isometric_City_Generatorv2
                                 Buildings[x, y, z].Texture = rand.Next(-1, 1);
                                 if (Buildings[x, y, z].Texture == 0)
                                 {
-                                    Buildings[x, y, z].Door = Assets.RandomBool();
-                                    if (Buildings[x, y, z].Door)
+                                    Buildings[x, y, z].FeatureTexture = Assets.Random.Next(-1, 1); ;
+                                    if (Buildings[x, y, z].FeatureTexture == 0)
                                     {
+                                        //Checks to see if there is an adjacent road it can flip the door to. If not, then delete the door,
                                         if (x != 0 && tiledata[x - 1, y].Texture == 1)
-                                            Buildings[x, y, z].Flip = true;
+                                            Buildings[x, y, z].FeatureFlip = true;
                                         else if (y >= tiledata.GetUpperBound(1) && tiledata[x, y + 1].Texture == 1)
-                                            Buildings[x, y, z].Flip = false;
+                                            Buildings[x, y, z].FeatureFlip = false;
                                         else
-                                            Buildings[x, y, z].Door = false;
+                                            Buildings[x, y, z].FeatureTexture = -1;
                                     }
                                 }
                             }
@@ -101,7 +103,13 @@ namespace Isometric_City_Generatorv2
                             if (z != 0 && Buildings[x, y, z - 1].Texture >= 0)
                             {
                                 Buildings[x, y, z].Texture = rand.Next(-1, 1);
-                                Buildings[x, y, z].Windows = Assets.RandomBool();
+
+                                //Generate windows.
+                                if (Assets.RandomBool())
+                                    Buildings[x, y, z].FeatureTexture = 1;
+                                else
+                                    Buildings[x, y, z].FeatureTexture = -1;
+
                             }
 
                             //If there is no bottom block to build upon, continue through the z loop.
@@ -158,16 +166,27 @@ namespace Isometric_City_Generatorv2
                                 b.DrawRect = Buildings[x, y, z].DrawRect;
                                 b.Tint = Buildings[x, y, z].Tint;
                                 b.Flip = Assets.RandomBool();
+                                b.FeatureFlip = b.Flip;
 
                                 //Assign roof texture
-                                if (z > 5)
+                                //Check to see if the building can be a skyscraper
+                                if (z > 3)
                                 {
-                                    b.Texture = Assets.Random.Next(Assets.MINROOFRANGE, Assets.MAXROOFRANGE);
+                                    b.Texture = Assets.Random.Next(Assets.MINROOFRANGE, Assets.MAXROOFRANGE);                                    
                                 }
-                                else
+                                else //IF not, make it a normal roof.
                                 {
-                                    b.Texture = 1;
+                                    b.Texture = 1;                                    
                                 }
+
+                                //Assign Features based on tile used
+                                if (b.Texture == 1)
+                                    b.FeatureTexture = Assets.Random.Next(Assets.MINBILLBOARDRANGE, Assets.MAXBILLBOARDRANGE);
+                                if(b.Texture == 2)
+                                    b.FeatureTexture = 5;
+                                if (b.Texture == 3)
+                                    b.FeatureTexture = -1;
+
                                 Buildings[x, y, z] = b;
                             }
 
@@ -175,6 +194,131 @@ namespace Isometric_City_Generatorv2
                     }
                 }
             }
+
+            //Sanity Check
+            for (int y = 0; y <= Buildings.GetUpperBound(1); y++)
+            {
+                for (int x = 0; x <= Buildings.GetUpperBound(0); x++)
+                {
+                    for (int z = 0; z <= Buildings.GetUpperBound(2); z++)
+                    {
+                        if (Buildings[x, y, z].Texture == 1)
+                        {
+                            List<Point> check = CheckFrontNeighbors(new Point(x, y));
+
+                            //Check if the bilboard is facing a wall if it is, flip it the other direction.
+                            foreach (Point c in check)
+                            {
+                                if (Buildings[c.X, c.Y, z].Texture == 0)
+                                {
+                                    if (c.X - 1 == x && Buildings[x, y, z].Flip)
+                                    {
+                                        Buildings[x, y, z].Flip = false;
+                                        Buildings[x, y, z].FeatureFlip = false;
+                                    }
+
+                                    if (c.Y + 1 == x && !Buildings[x, y, z].Flip)
+                                    {
+                                        Buildings[x, y, z].Flip = true;
+                                        Buildings[x, y, z].FeatureFlip = true;
+                                    }
+                                }
+                            }
+
+                            //Check if the billboard is next to another bilboard
+                            check = CheckNeighbors(new Point(x, y));
+                            foreach (Point c in check)
+                            {
+                                if (Buildings[c.X, c.Y, z].Texture == 1)
+                                {
+                                    Buildings[c.X, c.Y, z].Texture = -1;
+                                    Buildings[c.X, c.Y, z].FeatureTexture = -1;
+
+                                    Buildings[c.X, c.Y, z].Flip = false;
+                                    Buildings[c.X, c.Y, z].FeatureFlip = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+
+        private void AddStructures(Tile[,] tiledata)
+        {
+            for (int y = 0; y <= Buildings.GetUpperBound(1); y++)
+            {
+                for (int x = 0; x <= Buildings.GetUpperBound(0); x++)
+                {
+                    //If the tile below us is buildable, and there isn't already a building there
+                    if (tiledata[x, y].Texture == 0 && Buildings[x, y, 0].Texture == -1)
+                    {
+                        //One in ten chance
+                        if (Assets.Random.Next(0, 400) == 0)
+                        {
+                            Structure s = new Structure();
+                            //Change the top drawrect to match the structure
+                            s.DrawRect = new Rectangle(Buildings[x, y, 6].DrawRect.X, Buildings[x, y, 6].DrawRect.Y, Assets.StructureText[0].Width, Assets.StructureText[0].Height);
+
+                            //Prevent other stuff from thinking it's ok to build here. 
+                            for (int z = 0; z < Buildings.GetUpperBound(2); z++)
+                            {
+                                Buildings[x, y, z].Texture = -1;
+                            }
+
+                            //Change the appropriate one to the clocktower
+                            s.Texture = 0;
+
+                            s.Tint = Color.White;
+
+                            Buildings[x, y, 6] = s;
+                        }
+                    }
+                }
+        }
+            }
+
+        private List<Point> CheckNeighbors(Point check)
+        {
+            List<Point> answer = new List<Point>();
+
+            if (check.Y != 0)
+            {
+                answer.Add(new Point(check.X, check.Y - 1));
+            }
+            if (check.Y != Buildings.GetUpperBound(0))
+            {
+                answer.Add(new Point(check.X, check.Y + 1));
+            }
+
+            if (check.X != 0)
+            {
+                answer.Add(new Point(check.X - 1, check.Y));
+            }
+            if (check.X != Buildings.GetUpperBound(1))
+            {
+                answer.Add(new Point(check.X + 1, check.Y));
+            }
+
+            return answer;
+        }
+
+        private List<Point> CheckFrontNeighbors(Point check)
+        {
+            List<Point> answer = new List<Point>();
+
+            if (check.Y != Buildings.GetUpperBound(1))
+            {
+                answer.Add(new Point(check.X, check.Y + 1));
+            }
+
+            if (check.X != 0)
+            {
+                answer.Add(new Point(check.X - 1, check.Y));
+            }
+
+            return answer;
         }
        
     }

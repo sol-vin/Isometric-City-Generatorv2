@@ -7,7 +7,7 @@ namespace Isometric_City_Generatorv2
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        private const int MAXHEIGHT = 49;
+        private const int MAXHEIGHT = 49; 
         private const int MAXWIDTH = 49;
 
         private GraphicsDeviceManager graphics;

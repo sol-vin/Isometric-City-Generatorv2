@@ -5,7 +5,9 @@ namespace Isometric_City_Generatorv2
 {
     public class Building : IsometricObject
     {
-        public bool Door, Roof, Windows;
+        public int FeatureTexture;
+        public bool FeatureFlip;
+
 
         public Building()
         {
@@ -23,29 +25,20 @@ namespace Isometric_City_Generatorv2
                 else
                     s = SpriteEffects.None;
 
-                sb.Draw(Assets.BuildingText[Texture], DrawRect, Tint);                
+                SpriteEffects fs;
+                if (FeatureFlip)
+                    fs = SpriteEffects.FlipHorizontally;
+                else
+                    fs = SpriteEffects.None;
+
+                sb.Draw(Assets.BuildingText[Texture], DrawRect, null, Tint, 0f, Vector2.Zero, s, 0f);               
 
                 //Draw Features
-                if (Door)
+                if (FeatureTexture != -1)
                 {
-                    sb.Draw(Assets.Features[0], DrawRect, null, Color.White, 0f, Vector2.Zero, s, 0f);
+                    sb.Draw(Assets.Features[FeatureTexture], DrawRect, null, Color.White, 0f, Vector2.Zero, fs, 0f);    
                 }
-
-                if (Windows)
-                {
-                    sb.Draw(Assets.Features[1], DrawRect, Color.White);
-                }
-
-                if (Texture == 1)
-                {
-                    sb.Draw(Assets.Features[2], DrawRect, Color.White);
-                }
-
-                if (Texture == 2)
-                {
-                    sb.Draw(Assets.Features[3], DrawRect, Color.White);
-                }
-
+                
                 //Must be last!
                 if (Texture == 0)
                 {

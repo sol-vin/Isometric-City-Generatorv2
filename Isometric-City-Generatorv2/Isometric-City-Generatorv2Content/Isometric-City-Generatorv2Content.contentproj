@@ -63,13 +63,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="building\building1.png">
-      <Name>building1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="features\door.png">
       <Name>door</Name>
       <Importer>TextureImporter</Importer>
@@ -122,8 +115,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="features\roof1billboard.png">
-      <Name>roof1billboard</Name>
+    <Compile Include="features\roof1billboard1.png">
+      <Name>roof1billboard1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -138,6 +131,33 @@
   <ItemGroup>
     <Compile Include="building\roof2.png">
       <Name>roof2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="features\roof1billboard2.png">
+      <Name>roof1billboard2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="features\roof1billboard3.png">
+      <Name>roof1billboard3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="building\roof3.png">
+      <Name>roof3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="structures\clocktower\clocktower.png">
+      <Name>clocktower</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
