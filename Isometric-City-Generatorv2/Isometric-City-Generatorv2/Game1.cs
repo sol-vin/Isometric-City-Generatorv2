@@ -64,7 +64,6 @@ namespace Isometric_City_Generatorv2
             {
                 tf = new TileFactory(MAXWIDTH, MAXHEIGHT);
                 bf = new BuildingFactory(tf.TileData);
-                ScreenShot();
             }
             camera.Update();
 
@@ -75,7 +74,8 @@ namespace Isometric_City_Generatorv2
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            spriteBatch.Draw(rendertexture, new Vector2(camera.Position.X, camera.Position.Y), Color.White);
+            tf.Draw(spriteBatch, camera);
+            bf.Draw(spriteBatch, camera);
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -84,7 +84,6 @@ namespace Isometric_City_Generatorv2
         {
             tf = new TileFactory(MAXWIDTH, MAXHEIGHT);
             bf = new BuildingFactory(tf.TileData);
-            ScreenShot();
         }
 
         private void MakeWindow()
@@ -99,27 +98,6 @@ namespace Isometric_City_Generatorv2
             }
 
             return;
-        }
-
-        private void ScreenShot()
-        {
-            int w = GraphicsDevice.PresentationParameters.BackBufferWidth;
-            int h = GraphicsDevice.PresentationParameters.BackBufferHeight;
-
-            //force a frame to be drawn (otherwise back buffer is empty)
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            tf.Draw(spriteBatch, camera);
-            bf.Draw(spriteBatch, camera);
-            spriteBatch.End();
-
-            //pull the picture from the buffer
-            int[] backBuffer = new int[w * h];
-            GraphicsDevice.GetBackBufferData(backBuffer);
-
-            //copy into a texture
-            rendertexture = new Texture2D(GraphicsDevice, w, h, false, GraphicsDevice.PresentationParameters.BackBufferFormat);
-            rendertexture.SetData(backBuffer); 
         }
     }
 }

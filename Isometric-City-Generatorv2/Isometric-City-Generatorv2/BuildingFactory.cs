@@ -41,7 +41,8 @@ namespace Isometric_City_Generatorv2
                 {
                     for (int z = 0; z < Buildings.GetUpperBound(2); z++)
                     {
-                        Buildings[x, y, z].Draw(sb, cam);
+                        if(Buildings[x,y,z].DrawRect.Intersects(cam.ViewPort))
+                            Buildings[x, y, z].Draw(sb, cam);
                     }
                 }
             }
