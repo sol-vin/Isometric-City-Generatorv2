@@ -123,6 +123,11 @@
     <Compile Include="Assets.cs" />
     <Compile Include="Building.cs" />
     <Compile Include="BuildingFactory.cs" />
+    <Compile Include="Camera.cs" />
+    <Compile Include="Input\GamePadInput.cs" />
+    <Compile Include="Input\Input.cs" />
+    <Compile Include="Input\InputHandler.cs" />
+    <Compile Include="Input\KeyBoardInput.cs" />
     <Compile Include="IsometricObject.cs" />
     <Compile Include="Plant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

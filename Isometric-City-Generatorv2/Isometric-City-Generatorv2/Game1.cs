@@ -1,14 +1,20 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using InputEngine.Input;
 using System.Collections.Generic;
 
 namespace Isometric_City_Generatorv2
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        private const int MAXHEIGHT = 49; 
-        private const int MAXWIDTH = 49;
+        private Camera camera;
+        private KeyBoardInput randomize;
+
+        public Rectangle ActualScreen = new Rectangle(0, 0, 800, 500);
+
+        private const int MAXHEIGHT = 500; 
+        private const int MAXWIDTH = 500;
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -17,15 +23,21 @@ namespace Isometric_City_Generatorv2
         private BuildingFactory bf;
         private TileFactory tf;
 
+        private Texture2D rendertexture;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
+            Components.Add(new InputHandler(this));
+            randomize = new KeyBoardInput(Keys.Space);
+            camera = new Camera(ActualScreen);
             Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
-
+            MakeWindow();
             base.Initialize();
         }
 
@@ -48,11 +60,13 @@ namespace Isometric_City_Generatorv2
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            if (randomize.Pressed())
             {
                 tf = new TileFactory(MAXWIDTH, MAXHEIGHT);
                 bf = new BuildingFactory(tf.TileData);
+                ScreenShot();
             }
+            camera.Update();
 
             base.Update(gameTime);
         }
@@ -61,10 +75,7 @@ namespace Isometric_City_Generatorv2
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-
-            tf.Draw(spriteBatch);
-            bf.Draw(spriteBatch);
-
+            spriteBatch.Draw(rendertexture, new Vector2(camera.Position.X, camera.Position.Y), Color.White);
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -73,6 +84,42 @@ namespace Isometric_City_Generatorv2
         {
             tf = new TileFactory(MAXWIDTH, MAXHEIGHT);
             bf = new BuildingFactory(tf.TileData);
+            ScreenShot();
+        }
+
+        private void MakeWindow()
+        {
+            if ((ActualScreen.Width <= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width) && (ActualScreen.Height <= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height))
+            {
+                graphics.PreferredBackBufferWidth = ActualScreen.Width;
+                graphics.PreferredBackBufferHeight = ActualScreen.Height;
+                graphics.IsFullScreen = false;
+                graphics.ApplyChanges();
+                return;
+            }
+
+            return;
+        }
+
+        private void ScreenShot()
+        {
+            int w = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            int h = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+            //force a frame to be drawn (otherwise back buffer is empty)
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+            tf.Draw(spriteBatch, camera);
+            bf.Draw(spriteBatch, camera);
+            spriteBatch.End();
+
+            //pull the picture from the buffer
+            int[] backBuffer = new int[w * h];
+            GraphicsDevice.GetBackBufferData(backBuffer);
+
+            //copy into a texture
+            rendertexture = new Texture2D(GraphicsDevice, w, h, false, GraphicsDevice.PresentationParameters.BackBufferFormat);
+            rendertexture.SetData(backBuffer); 
         }
     }
 }

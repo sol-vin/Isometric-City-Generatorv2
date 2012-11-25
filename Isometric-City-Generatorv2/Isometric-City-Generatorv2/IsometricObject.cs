@@ -14,7 +14,7 @@ namespace Isometric_City_Generatorv2
         public Color Tint;
         public bool Flip;
 
-        public virtual void Draw(SpriteBatch sb)
+        public virtual void Draw(SpriteBatch sb, Camera camera)
         {
 
         }

@@ -27,12 +27,13 @@ namespace Isometric_City_Generatorv2
             Colors.Add(Color.DarkGray);
 
             AddBuildings(tiledata);
+            AddFeatures(tiledata);
             AddPlants(tiledata);
             AddRoofs();
             AddStructures(tiledata);
         }
 
-        public void Draw(SpriteBatch sb)
+        public void Draw(SpriteBatch sb, Camera cam)
         {
             for (int y = 0; y <= Buildings.GetUpperBound(1); y++)
             {
@@ -40,7 +41,7 @@ namespace Isometric_City_Generatorv2
                 {
                     for (int z = 0; z < Buildings.GetUpperBound(2); z++)
                     {
-                        Buildings[x, y, z].Draw(sb);
+                        Buildings[x, y, z].Draw(sb, cam);
                     }
                 }
             }
@@ -56,6 +57,7 @@ namespace Isometric_City_Generatorv2
                     for (int z = 0; z <= Buildings.GetUpperBound(2); z++)
                     {
                         Buildings[x, y, z] = new Building();
+                        Buildings[x, y, z].DrawRect = new Rectangle(tiledata[x, y].DrawRect.X, tiledata[x, y].DrawRect.Y - ((z + 1) * Assets.BUILDINGHEIGHT - z) + 1, Assets.Tilesize.X, Assets.Tilesize.Y);
                     }
                 }
             }
@@ -65,80 +67,136 @@ namespace Isometric_City_Generatorv2
             {
                 for (int x = 0; x <= Buildings.GetUpperBound(0); x++)
                 {
-                    //Pulls a random tint from our acceptable colors list to tint the building.
-                    Color tint = Colors[Assets.Random.Next(0, Colors.Count)];
+                //Pulls a random tint from our acceptable colors list to tint the building.
+                Color tint = Colors[Assets.Random.Next(0, Colors.Count)];
+                int buildingheight = 0;
 
-                    //This is where the building is erected
-                    for (int z = 0; z < Buildings.GetUpperBound(2); z++)
-                    {
-                        //Make the rectangles;
-                        Buildings[x, y, z].DrawRect = new Rectangle(tiledata[x, y].DrawRect.X, tiledata[x, y].DrawRect.Y - ((z + 1) * Assets.BUILDINGHEIGHT - z) + 1, Assets.Tilesize.X, Assets.Tilesize.Y);
-
-                        //Assign a Texture
-
-                        //First check to see if the floor tile below it can be built upon.
-                        if (tiledata[x, y].Texture == Assets.GRASS)
+                    //Assign a Texture
+                    //First check to see if the floor tile below it can be built upon.
+                    if (tiledata[x, y].Texture == Assets.GRASS)
+                    {               
+                        //Check the tile influence and set the building height accoridingly.
+                        if (tiledata[x, y].Influence == Tile.HEAVY)
                         {
-                            //Checks to see if it's the bottom one for door placement
-                            if (z == 0)
+                            //Spawn a building with an 80% chance.
+                            if (Assets.Random.Next(0, 10) < 4)
                             {
-                                //Makes it empty or not
-                                if (Assets.RandomBool())
-                                    Buildings[x, y, z].Texture = Assets.EMPTY;
+                                //80% chance to make a 6-8 tall building
+                                //20% chance to make a 1-5 tall building
+                                if (Assets.Random.Next(0, 10) < 8)
+                                    buildingheight = Assets.Random.Next(4, 6);
                                 else
-                                    Buildings[x, y, z].Texture = Assets.BOTTOMBLANKBLOCK;
-                                
-                                //Door placement
-                                if (Buildings[x, y, z].Texture == Assets.BOTTOMBLANKBLOCK)
-                                {
-                                    if (Assets.RandomBool())
-                                        Buildings[x, y, z].FeatureTexture = Assets.EMPTY;
-                                    else
-                                    {
-                                        Buildings[x, y, z].FeatureTexture = Assets.DOOR;
-
-                                        //Checks to see if there is an adjacent road it can flip the door to. If not, then delete the door,
-                                        if (x != 0 && tiledata[x - 1, y].Texture == Assets.ROAD)
-                                            Buildings[x, y, z].FeatureFlip = true;
-                                        else if (y >= tiledata.GetUpperBound(1) && tiledata[x, y + 1].Texture == Assets.ROAD)
-                                            Buildings[x, y, z].FeatureFlip = false;
-                                        else //If there isn't a road to align to, try making windows instead.
-                                        {
-                                            if (Assets.RandomBool())
-                                                Buildings[x, y, z].FeatureTexture = Assets.Windows[Assets.Random.Next(0, Assets.Windows.Count)];
-                                            else
-                                                Buildings[x, y, z].FeatureTexture = Assets.EMPTY;
-                                        }
-                                                                                
-                                    }
-                                }
-                            }
-
-                            if (z != 0 && Buildings[x, y, z - 1].Texture != Assets.EMPTY)
-                            {
-                                if (Assets.RandomBool())
-                                    Buildings[x, y, z].Texture = Assets.EMPTY;
-                                else
-                                    Buildings[x, y, z].Texture = Assets.BLANKBLOCK;
-
-                                //Generate windows.
-                                if (Assets.RandomBool())
-                                    Buildings[x, y, z].FeatureTexture = Assets.Windows[Assets.Random.Next(0, Assets.Windows.Count)];
-                                else
-                                    Buildings[x, y, z].FeatureTexture = Assets.EMPTY;
-
-                            }
-
-                            //If there is no bottom block to build upon, continue through the z loop.
-                            if (z != 0 && Buildings[x, y, z].Texture == Assets.EMPTY)
-                            {
-                                continue;
+                                    buildingheight = Assets.Random.Next(1, 4);
                             }
                         }
-                        else //Filters out all other tile types that could be below it. According to this, only 0 is considered a buildable block.
-                            Buildings[x, y, z].Texture = -1;
 
-                        Buildings[x, y, z].Tint = tint;
+                        else if (tiledata[x, y].Influence == Tile.MEDIUMHEAVY)
+                        {
+                            //Spawn a building with an 80% chance.
+                            if (Assets.Random.Next(0, 10) < 3)
+                            {
+                                //80% chance to make a 6-8 tall building
+                                //20% chance to make a 1-5 tall building
+                                if (Assets.Random.Next(0, 10) < 6)
+                                    buildingheight = Assets.Random.Next(3, 4);
+                                else
+                                    buildingheight = Assets.Random.Next(1, 3);
+                            }
+                        }
+
+                        else if (tiledata[x, y].Influence == Tile.MEDIUM)
+                        {
+                            //Spawn a building with an 80% chance.
+                            if (Assets.Random.Next(0, 10) < 2)
+                            {
+                                //80% chance to make a 6-8 tall building
+                                //20% chance to make a 1-5 tall building
+                                if (Assets.Random.Next(0, 10) < 5)
+                                    buildingheight = Assets.Random.Next(2, 3);
+                                else
+                                    buildingheight = Assets.Random.Next(1, 2);
+                            }
+                        }
+
+                        else if (tiledata[x, y].Influence == Tile.LOW)
+                        {
+                            //Spawn a building with an 80% chance.
+                            if (Assets.Random.Next(0, 10) < 1)
+                            {
+                                //80% chance to make a 6-8 tall building
+                                //20% chance to make a 1-5 tall building
+                                if (Assets.Random.Next(0, 10) < 5)
+                                    buildingheight = Assets.Random.Next(1, 2);
+                                else
+                                    buildingheight = 1;
+                            }
+                        }
+                        else
+                        {
+                            for (int z = 0; z < Assets.BUILDINGHEIGHT; z++)
+                            {
+                                Buildings[x, y, z].Texture = Assets.BLANKBLOCK;
+                                Buildings[x, y, z].Tint = Color.Red;
+                            }
+                        }
+
+                        //Build our building
+                        if (buildingheight != 0)
+                            for (int z = 0; z < buildingheight; z++)
+                            {
+                                if (z == 0)
+                                    Buildings[x, y, z].Texture = Assets.BOTTOMBLANKBLOCK;
+                                else
+                                    Buildings[x, y, z].Texture = Assets.BLANKBLOCK;
+                                Buildings[x, y, z].Tint = tint;
+                            }                        
+                    }
+                }
+            }
+        }
+
+        private void AddFeatures(Tile[,] tiledata)
+        {
+            for (int y = 0; y <= Buildings.GetUpperBound(1); y++)
+            {
+                for (int x = 0; x <= Buildings.GetUpperBound(0); x++)
+                {
+                    //Generate Doors
+                    if (Buildings[x, y, 0].Texture == Assets.BOTTOMBLANKBLOCK)
+                    {
+                        if (Assets.RandomBool())
+                            Buildings[x, y, 0].FeatureTexture = Assets.EMPTY;
+                        else
+                        {
+                            Buildings[x, y, 0].FeatureTexture = Assets.DOOR;
+
+                            //Checks to see if there is an adjacent road it can flip the door to. If not, then delete the door,
+                            if (x != 0 && tiledata[x - 1, y].Texture == Assets.ROAD)
+                                Buildings[x, y, 0].FeatureFlip = true;
+                            else if (y >= tiledata.GetUpperBound(1) && tiledata[x, y + 1].Texture == Assets.ROAD)
+                                Buildings[x, y, 0].FeatureFlip = false;
+                            else //If there isn't a road to align to, try making windows instead.
+                            {
+                                if (Assets.RandomBool())
+                                    Buildings[x, y, 0].FeatureTexture = Assets.Windows[Assets.Random.Next(0, Assets.Windows.Count)];
+                                else
+                                    Buildings[x, y, 0].FeatureTexture = Assets.EMPTY;
+                            }
+
+                        }
+                    }
+                    for (int z = 0; z < Assets.BUILDINGHEIGHT; z++ )
+                    {
+                        if (Buildings[x, y, z].Texture == Assets.BLANKBLOCK && Buildings[x, y, z].FeatureTexture == Assets.EMPTY)
+                        {
+                            //Generate Windows
+                            if (Assets.RandomBool())
+                                Buildings[x, y, z].FeatureTexture = Assets.EMPTY;
+                            else
+                            {
+                                Buildings[x, y, z].FeatureTexture = Assets.Windows[Assets.Random.Next(0, Assets.Windows.Count)];
+                            }
+                        }
                     }
                 }
             }
@@ -276,12 +334,34 @@ namespace Isometric_City_Generatorv2
                     //If the tile below us is buildable, and there isn't already a building there
                     if (tiledata[x, y].Texture == Assets.GRASS && Buildings[x, y, 0].Texture == Assets.EMPTY)
                     {
-                        //One in 400 chance
-                        if (Assets.Random.Next(0, 400) == 0)
+                        Point buildchance = Point.Zero;
+                        int texturechance = 0;
+
+                        if (tiledata[x, y].Influence == Tile.HEAVY)
+                        {
+                            buildchance = new Point(1,1000);
+                            texturechance = 8;
+                        }
+                        else if (tiledata[x, y].Influence == Tile.MEDIUMHEAVY)
+                        {
+                            buildchance = new Point(1,1500);
+                            texturechance = 5;
+                        }
+                        else if (tiledata[x, y].Influence == Tile.MEDIUM)
+                        {
+                            buildchance = new Point(1, 170);
+                            texturechance = 3;
+                        }
+                        else if (tiledata[x, y].Influence == Tile.LOW)
+                        {
+                            buildchance = new Point(1,2000);
+                            texturechance = 0;
+                        }
+
+                        //Roll the dice to see if a structure should be built.
+                        if (Assets.Random.Next(0, buildchance.Y) == buildchance.X)
                         {
                             Structure s = new Structure();
-                            //Change the top drawrect to match the structure
-                            
 
                             //Prevent other stuff from thinking it's ok to build here. 
                             for (int z = 0; z < Buildings.GetUpperBound(2); z++)
@@ -289,20 +369,16 @@ namespace Isometric_City_Generatorv2
                                 Buildings[x, y, z].Texture = Assets.EMPTY;
                             }
 
-                            //Search through the structures to find one that is only one block width and height
-                            //Randomly select it.
-                            do
-                            {
-                                for (int i = 0; i <= Assets.StructureText.GetUpperBound(0); i++)
-                                {
-                                    if (Assets.StructureText[i].Width == Assets.Tilesize.X && Assets.RandomBool())
-                                    {
-                                        s.Texture = i;
-                                        s.DrawRect = new Rectangle(Buildings[x, y, 6].DrawRect.X, Buildings[x, y, 6].DrawRect.Y, Assets.StructureText[i].Width, Assets.StructureText[i].Height);
-                                    }
+                            if (Assets.Random.Next(1, 10) <= texturechance)
+                                s.Texture = Assets.CLOCKTOWER;
+                            else
+                                s.Texture = Assets.RADIOTOWER;
 
-                                }
-                            } while (s.Texture == Assets.EMPTY);
+                            s.DrawRect = new Rectangle(
+                                Buildings[x, y, 6].DrawRect.X, 
+                                Buildings[x, y, 6].DrawRect.Y, 
+                                Assets.StructureText[s.Texture].Width, 
+                                Assets.StructureText[s.Texture].Height);
 
                             s.Tint = Color.White;
 

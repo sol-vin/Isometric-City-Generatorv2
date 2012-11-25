@@ -9,11 +9,17 @@ namespace Isometric_City_Generatorv2
 {
     public class Plant : Building
     {
-        public override void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb, Camera camera)
         {
             if (Texture >= 0)
             {
-                sb.Draw(Assets.Plants[Texture], DrawRect, Tint);
+                Rectangle camerarect = new Rectangle(
+                    DrawRect.X - camera.Position.X,
+                    DrawRect.Y - camera.Position.Y,
+                    DrawRect.Width,
+                    DrawRect.Height);
+
+                sb.Draw(Assets.Plants[Texture], camerarect, Tint);
             }
         }
     }

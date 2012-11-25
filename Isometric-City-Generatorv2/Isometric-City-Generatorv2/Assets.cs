@@ -9,7 +9,7 @@ namespace Isometric_City_Generatorv2
     public class Assets
     {
         public const int BUILDINGHEIGHT = 10;
-        public const int SpacingX = 20;
+        public const int SpacingX = 5;
         public const int SpacingY = 250;
 
         public const int EMPTY = -1;
