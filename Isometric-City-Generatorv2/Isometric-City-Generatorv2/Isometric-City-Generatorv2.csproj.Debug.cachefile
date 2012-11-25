@@ -1,5 +1,7 @@
 Content\floor\grid.xnb
+Content\building\bottomblankblock.xnb
 Content\features\door.xnb
+Content\features\windows1.xnb
 Content\floor\grass.xnb
 Content\floor\road.xnb
 Content\floor\road4way.xnb
@@ -14,11 +16,9 @@ Content\features\roof1billboard3.xnb
 Content\building\roof3.xnb
 Content\structures\radiotower.xnb
 Content\structures\clocktower.xnb
-Content\features\windows1.xnb
 Content\features\windows2.xnb
 Content\features\windows3.xnb
 Content\features\windows4.xnb
 Content\building\roof4.xnb
 Content\features\watertower.xnb
 Content\building\blankblock.xnb
-Content\building\bottomblankblock.xnb
